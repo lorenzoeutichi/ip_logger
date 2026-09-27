@@ -86,8 +86,8 @@ async fn main() -> Result<(), anyhow::Error> {
                 let event = unsafe { std::ptr::read_unaligned(item.as_ptr() as *const IpPair) }; 
                 
                 // Converte gli interi grezzi estratti in indirizzi IPv4 leggibili
-                let ip_sorgente = Ipv4Addr::from(event.src);
-                let ip_destinazione = Ipv4Addr::from(event.dst);
+                let ip_sorgente = Ipv4Addr::from(u32::from_be(event.src));
+                let ip_destinazione = Ipv4Addr::from(u32::from_be(event.dst));
 
                 println!("{} -> {}", ip_sorgente, ip_destinazione);
             }

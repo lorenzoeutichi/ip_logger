@@ -52,10 +52,10 @@ fn try_ip_logger(ctx: XdpContext) -> Result<u32, ()> {
             let ipv4hdr : *const Ipv4Hdr = prt_at(&ctx, 14)?; // EthHdr::LEN
 
             // Estrazione dei bit grezzi riguardanti IP sorgente e destinazione
-            let src_addr = u32::from_be_bytes(unsafe {
+            let src_addr_raw = u32::from_ne_bytes(unsafe {
                 (*ipv4hdr).src_addr
             });
-            let dsr_addr = u32::from_be_bytes(unsafe {
+            let dst_addr_raw = u32::from_ne_bytes(unsafe {
                 (*ipv4hdr).dst_addr
             });
 
@@ -66,8 +66,8 @@ fn try_ip_logger(ctx: XdpContext) -> Result<u32, ()> {
                     core::ptr::write(
                         entry.as_mut_ptr(), 
                         IpPair {
-                            src: src_addr,
-                            dst: dsr_addr,
+                            src: src_addr_raw,
+                            dst: dst_addr_raw,
                         }
                     );
                 }
